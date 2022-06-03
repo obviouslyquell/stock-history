@@ -1,24 +1,23 @@
-import logo from './logo.svg';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import './App.css';
+import Graph from './Components/Graph';
+import Info from './Components/Info';
+import Sidebar from './Components/Sidebar';
+import { dataContext } from './context';
 
 function App() {
+  const [dataValue, setDataValue] = useState('');
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <dataContext.Provider value={{ dataValue, setDataValue }}>
+      <div className="App">
+        <Sidebar />
+        <div className="container">
+          <Graph />
+          {/* <Info /> */}
+        </div>
+      </div>
+    </dataContext.Provider>
   );
 }
 
