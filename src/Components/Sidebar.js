@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { dataContext } from '../context';
 
 function Sidebar() {
@@ -11,11 +11,6 @@ function Sidebar() {
   const url = 'https://www.alphavantage.co/';
   const stock = 'AAPL';
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`${url}query?function=TIME_SERIES_MONTHLY_ADJUSTED&symbol=${stock}&apikey=${key}`)
-  //     .then((data) => console.log(data.data['Monthly Adjusted Time Series'])); // получение для IBM с 1999
-  // }, []);
   function convertForGraph(obj) {
     const ticket = obj['Meta Data']['2. Symbol'];
     const arr = [];
@@ -23,12 +18,12 @@ function Sidebar() {
       arr.push({
         symbol: ticket,
         name: property,
-        uv: obj['Monthly Adjusted Time Series'][property]['4. close'],
+        price: obj['Monthly Adjusted Time Series'][property]['4. close'],
         amt: obj['Monthly Adjusted Time Series'][property]['6. volume'],
         div: obj['Monthly Adjusted Time Series'][property]['7. dividend amount'],
       });
     }
-    const max = Math.max(...arr.map((o) => o.uv));
+    const max = Math.max(...arr.map((o) => o.price));
     return { ticket: ticket, arr: arr, max: max };
   }
   const getData = (event) => {
@@ -42,13 +37,21 @@ function Sidebar() {
     setValue(e.target.value);
   };
   return (
-    <div className="sidebar">
-      <form action="submit">
-        <input type="text" placeholder="Type ticket" value={value} onChange={handleChange}></input>
+    <header className="header">
+      <form action="submit" className="header__form">
+        <input
+          id="input"
+          className="input-text"
+          type="text"
+          placeholder="Type a ticket..."
+          value={value}
+          onChange={handleChange}></input>
+        <label htmlFor="input" className="input-label">
+          Stock
+        </label>
         <button onClick={getData}>Submit</button>
       </form>
-      <p>open price :</p>
-    </div>
+    </header>
   );
 }
 

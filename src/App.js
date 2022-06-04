@@ -1,8 +1,6 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import './App.css';
+import { useState } from 'react';
+import './App.scss';
 import Graph from './Components/Graph';
-import Info from './Components/Info';
 import Sidebar from './Components/Sidebar';
 import { dataContext } from './context';
 

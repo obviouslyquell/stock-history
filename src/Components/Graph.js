@@ -18,30 +18,28 @@ function Graph() {
 
   return (
     <div className="graph">
-      <h1>{dataValue.ticket}</h1>
+      <h1 className="graph__ticket">{dataValue.ticket}</h1>
       <ResponsiveContainer width="100%" height={500}>
-        {/* <LineChart data={dataValue.arr} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-          <CartesianGrid stroke="#ccc" />
-          <XAxis dataKey="name" reversed={true} />
-          <YAxis domain={[0, Math.ceil(dataValue.max)]} />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-        </LineChart> */}
-        <AreaChart data={dataValue.arr} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+        <AreaChart data={dataValue.arr} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
           <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.9} />
               <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="name" reversed={true} />
-          <YAxis domain={[0, Math.ceil(dataValue.max)]} />
-          <CartesianGrid strokeDasharray="3 3" />
-          <Tooltip />
+          <XAxis dataKey="name" reversed={true} axisLine={false} tickLine={false} />
+          <YAxis
+            domain={[0, Math.ceil(dataValue.max)]}
+            axisLine={false}
+            tickLine={false}
+            tickCount={6}
+            tickFormatter={(i) => `$${i.toFixed(2)}`}
+          />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <Tooltip content={<CustomTooltip />} />
           <Area
             type="monotone"
-            dataKey="uv"
+            dataKey="price"
             stroke="#8884d8"
             fillOpacity={1}
             fill="url(#colorUv)"
@@ -58,5 +56,17 @@ function Graph() {
     </div>
   );
 }
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active) {
+    return (
+      <div className="tooltip">
+        <h4 className="tooltip__date">{label}</h4>
+        <p>Price: {payload && payload[0].value}</p>
+        <p>Dividends: {payload && payload[0].payload.div}</p>
+      </div>
+    );
+  }
+};
 
 export default Graph;
