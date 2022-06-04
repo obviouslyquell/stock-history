@@ -24,6 +24,7 @@ function Sidebar() {
       });
     }
     const max = Math.max(...arr.map((o) => o.price));
+    const min = Math.min(...arr.map((o) => o.price));
     return { ticket: ticket, arr: arr, max: max };
   }
   const getData = (event) => {
@@ -34,7 +35,7 @@ function Sidebar() {
   };
 
   const handleChange = (e) => {
-    setValue(e.target.value);
+    setValue(e.target.value.toUpperCase());
   };
   return (
     <header className="header">

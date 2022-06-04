@@ -27,7 +27,13 @@ function Graph() {
               <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="name" reversed={true} axisLine={false} tickLine={false} />
+          <XAxis
+            dataKey="name"
+            reversed={true}
+            axisLine={false}
+            tickLine={false}
+            domain={[Math.ceil(dataValue.min) - 200, 'auto']}
+          />
           <YAxis
             domain={[0, Math.ceil(dataValue.max)]}
             axisLine={false}
