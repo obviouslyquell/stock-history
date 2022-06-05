@@ -12,10 +12,11 @@ import {
   YAxis,
 } from 'recharts';
 import { dataContext } from '../context';
+import CustomizedDot from './CustomizedDot';
 
 function Graph() {
   const { dataValue, setDataValue } = useContext(dataContext);
-
+  console.log(dataValue.arr);
   return (
     <div className="graph">
       <h1 className="graph__ticket">{dataValue.ticket}</h1>
@@ -41,22 +42,18 @@ function Graph() {
             tickCount={6}
             tickFormatter={(i) => `$${i.toFixed(2)}`}
           />
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <CartesianGrid strokeDasharray="3 4" vertical={false} />
           <Tooltip content={<CustomTooltip />} />
           <Area
             type="monotone"
             dataKey="price"
             stroke="#8884d8"
+            stackId="1"
             fillOpacity={1}
             fill="url(#colorUv)"
+            activeDot={{ stroke: 'white', strokeWidth: 1, r: 3 }}
           />
-          <Area
-            type="monotone"
-            dataKey="pv"
-            stroke="#82ca9d"
-            fillOpacity={1}
-            fill="url(#colorPv)"
-          />
+          <Area type="monotone" dataKey="div" stackId="2" stroke="#82ca9d" fill="#82ca9d" />
         </AreaChart>
       </ResponsiveContainer>
     </div>
