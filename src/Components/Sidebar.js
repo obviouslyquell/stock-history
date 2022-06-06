@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { dataContext } from '../context';
 
 function Sidebar() {
@@ -7,6 +7,7 @@ function Sidebar() {
   const [value, setValue] = useState(''); // контроль инпута
   const [selectValue, setSelectValue] = useState('Month');
   const [stockInfo, setStockInfo] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
 
   const key = 'QZIEPYB5LUEZ87YV';
   const url = 'https://www.alphavantage.co/';
@@ -87,11 +88,30 @@ function Sidebar() {
     axios
       .get(`${url}query?function=${timeRange}&symbol=${value}&apikey=${key}`)
       .then((data) => setDataValue(convertForGraph(data.data)));
-    console.log(selectValue);
   };
+
+  // const getSuggestions = (ticket) => {
+  //   axios
+  //     .get(
+  //       `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${ticket}&apikey=${key}`,
+  //     )
+  //     .then((data) => setSuggestions(data.data.bestMatches));
+  //   console.log(suggestions);
+  // };
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${value}&apikey=${key}`,
+      )
+      .then((data) => setSuggestions(data.data.bestMatches));
+  }, [value]);
 
   const handleChange = (e) => {
     setValue(e.target.value.toUpperCase());
+    // if (value.length > 1) {
+    //   getSuggestions(value);
+    // }
   };
   const handleSelectChange = (e) => {
     setSelectValue(e.target.value);
@@ -105,7 +125,8 @@ function Sidebar() {
           type="text"
           placeholder="Type a ticket..."
           value={value}
-          onChange={handleChange}></input>
+          onChange={handleChange}
+          autoComplete="off"></input>
         <label htmlFor="input" className="input-label">
           Stock
         </label>
@@ -116,6 +137,13 @@ function Sidebar() {
         </select>
         <button onClick={getData}>Submit</button>
       </form>
+      {suggestions &&
+        suggestions.map((e, index) => (
+          <div key={index} className="search__container">
+            <span className="search__item-name">{e['1. symbol']}</span>
+            <span className="search__item-currency">{e['8. currency']}</span>
+          </div>
+        ))}
     </header>
   );
 }

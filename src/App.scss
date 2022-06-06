@@ -48,7 +48,8 @@ body {
   display: flex;
 }
 .container {
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
 }
 .graph__ticket {
   color: #fff;
@@ -121,4 +122,13 @@ body {
   opacity: 1;
   transform: translate3d(0, var(--labelTransformedPosY), 0) scale(var(--labelScaleFactor));
   transition: transform var(--inputTransitionDuration), visibility 0ms, z-index 0ms;
+}
+
+.search__container {
+  color: black;
+  background-color: white;
+  padding: 2px;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
 }

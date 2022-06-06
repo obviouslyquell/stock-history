@@ -12,7 +12,6 @@ import {
   YAxis,
 } from 'recharts';
 import { dataContext } from '../context';
-import CustomizedDot from './CustomizedDot';
 
 function Graph() {
   const { dataValue, setDataValue } = useContext(dataContext);
@@ -64,7 +63,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (active) {
     return (
       <div className="tooltip">
-        <h4 className="tooltip__date">{label}</h4>
+        <h4 className="tooltip__date">{label.toString()}</h4>
         <p>Price: {payload && payload[0].value}</p>
         <p>Dividends: {payload && payload[0].payload.div}</p>
       </div>
