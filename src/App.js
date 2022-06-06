@@ -11,7 +11,11 @@ function App() {
       <div className="App">
         <Sidebar />
         <div className="container">
-          <Graph />
+          {dataValue ? (
+            <Graph />
+          ) : (
+            <div className="App__hint">Type your stock ticket in search</div>
+          )}
           {/* <Info /> */}
         </div>
       </div>

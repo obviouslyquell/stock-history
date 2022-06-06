@@ -1,3 +1,8 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 :root {
   /* generic */
   --gutterSm: 0.4rem;
@@ -50,9 +55,17 @@ $focus-ring: 0px 0px 0px 2px $mid;
 .App {
   display: flex;
   flex-direction: column;
+
+  &__hint {
+    color: white;
+  }
 }
 body {
   background-color: #212121;
+}
+.box-shadow {
+  box-shadow: 0.2rem 0.8rem 1.6rem var(--colorPrimary600);
+  transition: box-shadow var(--transitionDuration);
 }
 .header {
   padding: 2rem;
@@ -146,6 +159,49 @@ body {
 }
 .header__form {
   display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  transition: 0.3s linear all;
+  .select {
+    border: none;
+
+    overflow: hidden;
+    position: relative;
+    width: 10%;
+
+    select {
+      width: 100%;
+      height: 100%;
+      border: none;
+
+      -webkit-appearance: none;
+      text-align: center;
+      &:focus {
+        outline: none;
+      }
+    }
+    .desc {
+      position: absolute;
+      bottom: 0px;
+      right: 12px;
+      font-size: 24px;
+
+      &::before {
+        content: '';
+        border-top: 8px solid #ccc;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+      }
+    }
+  }
+
+  &-btn {
+    width: 20%;
+    background-color: white;
+    border-radius: 0 0.4rem 0.4rem 0;
+    border: none;
+    font-size: 20px;
+  }
 }
 .container {
   width: 90%;
@@ -160,12 +216,7 @@ body {
   color: black;
   padding-inline: 1rem;
   padding-block: 0.3rem;
-  box-shadow: 15px 30px 40px 5px rgba(0, 0, 0, 0.3);
   text-align: center;
-}
-
-.header__form {
-  position: relative;
 }
 
 .input-text {
@@ -173,13 +224,13 @@ body {
   margin: 0;
   padding: var(--inputPaddingV) var(--inputPaddingH);
   color: inherit;
-  width: 100%;
+  width: 70%;
   font-family: inherit;
   font-size: var(--inputFontSize);
   font-weight: inherit;
   line-height: var(--inputLineHeight);
   border: none;
-  border-radius: 0.4rem;
+  border-radius: 0.4rem 0 0 0.4rem;
   transition: box-shadow var(--transitionDuration);
 }
 
@@ -189,7 +240,9 @@ body {
 
 .input-text:focus {
   outline: none;
-  // box-shadow: 0.2rem 0.8rem 1.6rem var(--colorPrimary600);
+}
+.input-text:focus > .header__form {
+  box-shadow: 0.2rem 0.8rem 1.6rem var(--colorPrimary600);
 }
 
 .input-label {
@@ -231,4 +284,35 @@ body {
   z-index: 2;
   display: flex;
   justify-content: space-between;
+}
+
+@media screen and (max-width: 500px) {
+  .header__form {
+    flex-direction: column;
+    align-items: center;
+
+    .input-text {
+      border-radius: 0.4rem;
+    }
+    &-btn {
+      border-radius: 0.4rem;
+    }
+  }
+  .select {
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 60px !important;
+    select {
+      padding: 0 !important;
+      text-align: center;
+      border-radius: 3px;
+    }
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .desc {
+    display: none;
+  }
 }

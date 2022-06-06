@@ -9,27 +9,30 @@ function Sidebar() {
   const [stockInfo, setStockInfo] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [enableSearch, setEnableSearch] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const key = 'QZIEPYB5LUEZ87YV';
   const url = 'https://www.alphavantage.co/';
   const stock = 'AAPL';
 
-  // function convertForGraph(obj) {
-  //   const ticket = obj['Meta Data']['2. Symbol'];
-  //   const arr = [];
-  //   for (const property in obj['Monthly Adjusted Time Series']) {
-  //     arr.push({
-  //       symbol: ticket,
-  //       name: property,
-  //       price: obj['Monthly Adjusted Time Series'][property]['4. close'],
-  //       amt: obj['Monthly Adjusted Time Series'][property]['6. volume'],
-  //       div: obj['Monthly Adjusted Time Series'][property]['7. dividend amount'],
-  //     });
-  //   }
-  //   const max = Math.max(...arr.map((o) => o.price));
-  //   const min = Math.min(...arr.map((o) => o.price));
-  //   return { ticket: ticket, arr: arr, max: max };
-  // }
+  useEffect(() => {
+    document
+      .getElementById('input')
+      .addEventListener('focus', () => document.getElementById('form').classList.add('box-shadow'));
+    document
+      .getElementById('input')
+      .addEventListener('blur', () =>
+        document.getElementById('form').classList.remove('box-shadow'),
+      );
+    document
+      .getElementById('standard-select')
+      .addEventListener('focus', () => document.getElementById('form').classList.add('box-shadow'));
+    document
+      .getElementById('standard-select')
+      .addEventListener('blur', () =>
+        document.getElementById('form').classList.remove('box-shadow'),
+      );
+  }, []);
   function convertForGraph(obj) {
     if (Object.hasOwn(obj, 'Note')) {
       alert('5 запросов в минуту');
@@ -75,6 +78,7 @@ function Sidebar() {
   }
 
   const getData = (event) => {
+    setIsLoading(true);
     event.preventDefault();
     let timeRange = '';
     switch (selectValue) {
@@ -91,21 +95,13 @@ function Sidebar() {
         break;
     }
 
-    axios
-      .get(`${url}query?function=${timeRange}&symbol=${value}&apikey=${key}`)
-      .then((data) => setDataValue(convertForGraph(data.data)));
+    axios.get(`${url}query?function=${timeRange}&symbol=${value}&apikey=${key}`).then((data) => {
+      setDataValue(convertForGraph(data.data));
+      setIsLoading(false);
+    });
 
     setValue(''); // сбрасывает инпут
   };
-
-  // const getSuggestions = (ticket) => {
-  //   axios
-  //     .get(
-  //       `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${ticket}&apikey=${key}`,
-  //     )
-  //     .then((data) => setSuggestions(data.data.bestMatches));
-  //   console.log(suggestions);
-  // };
 
   useEffect(() => {
     if (enableSearch) {
@@ -126,25 +122,12 @@ function Sidebar() {
   };
   const handleChange = (e) => {
     setValue(e.target.value.toUpperCase());
-    // if (value.length > 1) {
-    //   getSuggestions(value);
-    // }
   };
   const handleSelectChange = (e) => {
     setSelectValue(e.target.value);
   };
   return (
     <header className="header">
-      {/* <input
-        type="checkbox"
-        id="searchCheckBox"
-        checked={enableSearch}
-        onChange={() => setEnableSearch(!enableSearch)}
-      />
-      <label htmlFor="searchCheckBox" className="checkbox__label">
-        Enable search
-      </label> */}
-
       <label className="toggle" htmlFor="searchCheckBox">
         <input
           type="checkbox"
@@ -165,7 +148,7 @@ function Sidebar() {
         Enable search
       </label>
 
-      <form action="submit" className="header__form">
+      <form action="submit" className="header__form" id="form">
         <input
           id="input"
           className="input-text"
@@ -177,12 +160,20 @@ function Sidebar() {
         <label htmlFor="input" className="input-label">
           Stock
         </label>
-        <select value={selectValue} onChange={handleSelectChange}>
-          <option value="Month">Month</option>
-          <option value="Week">Week</option>
-          <option value="Day">Day</option>
-        </select>
-        <button onClick={getData} id="searchBtn">
+        <label htmlFor="standard-select"></label>
+        <div className="select">
+          <select id="standard-select" value={selectValue} onChange={handleSelectChange}>
+            <option value="Option 1">Month</option>
+            <option value="Option 2">Week</option>
+            <option value="Option 3">Day</option>
+          </select>
+          <div className="desc"></div>
+        </div>
+        <button
+          onClick={getData}
+          id="searchBtn"
+          className="header__form-btn"
+          style={isLoading ? { backgroundColor: 'black' } : {}}>
           Submit
         </button>
       </form>
