@@ -34,6 +34,19 @@
   --inputTransitionTF: var(--transitionTF);
 }
 
+$toggle-indicator-size: 24px; // changing this number will resize the whole toggle
+$track-height: $toggle-indicator-size + 6;
+$track-width: $toggle-indicator-size * 2.5;
+$highContrastModeSupport: solid 2px transparent;
+$speed: 0.3s;
+$gray: gray;
+$dark: black;
+$light: #212121;
+$mid: white;
+$track-border: $mid;
+$track-background: $light;
+$focus-ring: 0px 0px 0px 2px $mid;
+
 .App {
   display: flex;
   flex-direction: column;
@@ -43,6 +56,93 @@ body {
 }
 .header {
   padding: 2rem;
+  .checkbox__label {
+    color: white;
+    font-size: 20px;
+  }
+  .toggle {
+    align-items: center;
+    border-radius: 100px;
+    display: flex;
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: $mid;
+  }
+  // Since we can't style the checkbox directly, we "hide" it so we can draw the toggle.
+  .toggle__input {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+
+    // This style sets the focus ring. The ":not([disabled])" prevents the focus ring from creating a flash when the element is clicked.
+    &:not([disabled]):active + .toggle-track,
+    &:not([disabled]):focus + .toggle-track {
+      border: 1px solid transparent;
+      box-shadow: $focus-ring;
+    }
+
+    &:disabled + .toggle-track {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
+
+  .toggle-track {
+    background: $track-background;
+    border: 1px solid $track-border;
+    border-radius: 100px;
+    cursor: pointer;
+    display: flex;
+    height: $track-height;
+    margin-right: 12px;
+    position: relative;
+    width: $track-width;
+  }
+
+  .toggle-indicator {
+    align-items: center;
+    background: $gray;
+    border-radius: $toggle-indicator-size;
+    bottom: 3px;
+    display: flex;
+    height: $toggle-indicator-size;
+    justify-content: center;
+    left: 3px;
+    outline: $highContrastModeSupport;
+    position: absolute;
+    transition: $speed;
+    width: $toggle-indicator-size;
+  }
+
+  // The check mark is optional
+  .checkMark {
+    fill: #fff;
+    height: $toggle-indicator-size - 4;
+    width: $toggle-indicator-size - 4;
+    opacity: 0;
+    transition: opacity $speed ease-in-out;
+  }
+
+  .toggle__input:checked + .toggle-track .toggle-indicator {
+    background: $gray;
+    transform: translateX($track-width - $track-height);
+
+    .checkMark {
+      opacity: 1;
+      transition: opacity $speed ease-in-out;
+    }
+  }
+
+  @media screen and (-ms-high-contrast: active) {
+    .toggle-track {
+      border-radius: 0;
+    }
+  }
 }
 .header__form {
   display: flex;
@@ -89,7 +189,7 @@ body {
 
 .input-text:focus {
   outline: none;
-  box-shadow: 0.2rem 0.8rem 1.6rem var(--colorPrimary600);
+  // box-shadow: 0.2rem 0.8rem 1.6rem var(--colorPrimary600);
 }
 
 .input-label {
