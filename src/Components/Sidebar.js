@@ -95,10 +95,14 @@ function Sidebar() {
         break;
     }
 
-    axios.get(`${url}query?function=${timeRange}&symbol=${value}&apikey=${key}`).then((data) => {
-      setDataValue(convertForGraph(data.data));
-      setIsLoading(false);
-    });
+    axios
+      .get(`${url}query?function=${timeRange}&symbol=${value}&apikey=${key}`)
+      .then((data) => {
+        setDataValue(convertForGraph(data.data));
+        setIsLoading(false);
+      })
+      .catch((err) => alert(err))
+      .finally(() => setIsLoading(false));
 
     setValue(''); // сбрасывает инпут
   };
@@ -172,8 +176,7 @@ function Sidebar() {
         <button
           onClick={getData}
           id="searchBtn"
-          className="header__form-btn"
-          style={isLoading ? { backgroundColor: 'black' } : {}}>
+          className={`header__form-btn ${isLoading ? 'loading' : ''}`}>
           Submit
         </button>
       </form>
