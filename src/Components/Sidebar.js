@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { dataContext } from '../context';
 
 function Sidebar() {
-  const { dataValue, setDataValue } = useContext(dataContext);
+  const { dataValue, setDataValue, news, setNews } = useContext(dataContext);
   const [value, setValue] = useState(''); // контроль инпута
   const [selectValue, setSelectValue] = useState('Month');
   const [stockInfo, setStockInfo] = useState('');
@@ -11,7 +11,6 @@ function Sidebar() {
   const [enableSearch, setEnableSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const key = 'QZIEPYB5LUEZ87YV';
   const url = 'https://www.alphavantage.co/';
   const stock = 'AAPL';
 
@@ -49,6 +48,9 @@ function Sidebar() {
           price: obj['Monthly Adjusted Time Series'][property]['4. close'],
           amt: obj['Monthly Adjusted Time Series'][property]['6. volume'],
           div: obj['Monthly Adjusted Time Series'][property]['7. dividend amount'],
+          open: obj['Monthly Adjusted Time Series'][property]['1. open'],
+          high: obj['Monthly Adjusted Time Series'][property]['2. high'],
+          low: obj['Monthly Adjusted Time Series'][property]['3. low'],
         });
       }
     } else if (obj['Meta Data']['1. Information'] === 'Weekly Adjusted Prices and Volumes') {
@@ -59,6 +61,9 @@ function Sidebar() {
           price: obj['Weekly Adjusted Time Series'][property]['4. close'],
           amt: obj['Weekly Adjusted Time Series'][property]['6. volume'],
           div: obj['Weekly Adjusted Time Series'][property]['7. dividend amount'],
+          open: obj['Weekly Adjusted Time Series'][property]['1. open'],
+          high: obj['Weekly Adjusted Time Series'][property]['2. high'],
+          low: obj['Weekly Adjusted Time Series'][property]['3. low'],
         });
       }
     } else if (
@@ -70,6 +75,9 @@ function Sidebar() {
           name: property,
           price: obj['Time Series (Daily)'][property]['4. close'],
           amt: obj['Time Series (Daily)'][property]['5. volume'],
+          open: obj['Time Series (Daily)'][property]['1. open'],
+          high: obj['Time Series (Daily)'][property]['2. high'],
+          low: obj['Time Series (Daily)'][property]['3. low'],
         });
       }
     }
@@ -80,6 +88,7 @@ function Sidebar() {
 
   const getData = (event) => {
     setIsLoading(true);
+    setNews([]);
     event.preventDefault();
     let timeRange = '';
     switch (selectValue) {
@@ -97,7 +106,9 @@ function Sidebar() {
     }
 
     axios
-      .get(`${url}query?function=${timeRange}&symbol=${value}&apikey=${key}`)
+      .get(
+        `${url}query?function=${timeRange}&symbol=${value}&apikey=${process.env.REACT_APP_STOCK_KEY}`,
+      )
       .then((data) => {
         setDataValue(convertForGraph(data.data));
         setIsLoading(false);
@@ -109,10 +120,10 @@ function Sidebar() {
   };
 
   useEffect(() => {
-    if (enableSearch) {
+    if (enableSearch && value.length > 0) {
       axios
         .get(
-          `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${value}&apikey=${key}`,
+          `${url}query?function=SYMBOL_SEARCH&keywords=${value}&apikey=${process.env.REACT_APP_STOCK_KEY}`,
         )
         .then((data) => setSuggestions(data.data.bestMatches));
       document.getElementById('input').classList.add('border-radius-top-left');
@@ -123,9 +134,8 @@ function Sidebar() {
       document.getElementById('searchBtn').classList.remove('border-radius-top-right');
     }
   }, [value, enableSearch]);
-  console.log(suggestions);
+
   const onItemClick = (e) => {
-    console.log(e.target.textContent);
     setValue(e.target.textContent);
     document.getElementById('searchBtn').click();
   };
@@ -183,9 +193,9 @@ function Sidebar() {
         <label htmlFor="standard-select"></label>
         <div className="select">
           <select id="standard-select" value={selectValue} onChange={handleSelectChange}>
-            <option value="Option 1">Month</option>
-            <option value="Option 2">Week</option>
-            <option value="Option 3">Day</option>
+            <option value="Month">Month</option>
+            <option value="Week">Week</option>
+            <option value="Day">Day</option>
           </select>
           <div className="desc"></div>
         </div>

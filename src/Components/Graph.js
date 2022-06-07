@@ -18,7 +18,7 @@ function Graph() {
   console.log(dataValue.arr);
   return (
     <div className="graph">
-      <h1 className="graph__ticket">{dataValue.ticket}</h1>
+      <h1 className="graph__ticket heading">{dataValue.ticket}</h1>
       <ResponsiveContainer width="100%" height={500}>
         <AreaChart data={dataValue.arr} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
           <defs>
