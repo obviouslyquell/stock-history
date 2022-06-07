@@ -63,9 +63,18 @@ $focus-ring: 0px 0px 0px 2px $mid;
 body {
   background-color: #212121;
 }
+.header {
+  position: relative;
+}
 .box-shadow {
   box-shadow: 0.2rem 0.8rem 1.6rem var(--colorPrimary600);
   transition: box-shadow var(--transitionDuration);
+}
+.border-radius-top-left {
+  border-radius: 0.4rem 0 0 0 !important;
+}
+.border-radius-top-right {
+  border-radius: 0 0.4rem 0 0 !important;
 }
 .loading {
   background-color: var(--colorPrimary400) !important;
@@ -85,6 +94,7 @@ body {
     font-size: 20px;
   }
   .toggle {
+    width: fit-content;
     align-items: center;
     border-radius: 100px;
     display: flex;
@@ -93,7 +103,6 @@ body {
     margin-bottom: 30px;
     color: $mid;
   }
-  // Since we can't style the checkbox directly, we "hide" it so we can draw the toggle.
   .toggle__input {
     clip: rect(0 0 0 0);
     clip-path: inset(50%);
@@ -314,10 +323,12 @@ body {
 .search__container {
   color: black;
   background-color: white;
-  padding: 2px;
+  padding: 4px;
   z-index: 2;
   display: flex;
   justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  font-size: 20px;
 }
 
 @keyframes spin {
@@ -360,6 +371,24 @@ body {
         padding: 0 !important;
         text-align: center;
       }
+    }
+    &-search__suggestions {
+      position: absolute;
+      top: 10rem;
+      right: 0;
+      left: 0;
+      padding-inline: 2rem;
+    }
+  }
+
+  .search__item {
+    &-name {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    &-region {
+      display: none;
     }
   }
 }

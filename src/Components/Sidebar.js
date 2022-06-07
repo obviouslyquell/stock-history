@@ -33,6 +33,7 @@ function Sidebar() {
         document.getElementById('form').classList.remove('box-shadow'),
       );
   }, []);
+
   function convertForGraph(obj) {
     if (Object.hasOwn(obj, 'Note')) {
       alert('5 запросов в минуту');
@@ -114,11 +115,15 @@ function Sidebar() {
           `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${value}&apikey=${key}`,
         )
         .then((data) => setSuggestions(data.data.bestMatches));
+      document.getElementById('input').classList.add('border-radius-top-left');
+      document.getElementById('searchBtn').classList.add('border-radius-top-right');
     } else {
       setSuggestions([]); // hide suggestions
+      document.getElementById('input').classList.remove('border-radius-top-left');
+      document.getElementById('searchBtn').classList.remove('border-radius-top-right');
     }
   }, [value, enableSearch]);
-
+  console.log(suggestions);
   const onItemClick = (e) => {
     console.log(e.target.textContent);
     setValue(e.target.textContent);
@@ -132,13 +137,16 @@ function Sidebar() {
   };
   return (
     <header className="header">
-      <label className="toggle" htmlFor="searchCheckBox">
+      <label className="toggle" htmlFor="searchCheckBox" id="standard-toggle" tabIndex="0">
         <input
           type="checkbox"
           className="toggle__input"
           id="searchCheckBox"
           checked={enableSearch}
-          onChange={() => setEnableSearch(!enableSearch)}
+          onChange={() => {
+            setEnableSearch(!enableSearch);
+            console.log('setenable');
+          }}
         />
         <span className="toggle-track">
           <span className="toggle-indicator">
@@ -160,6 +168,14 @@ function Sidebar() {
           placeholder="Type a ticket..."
           value={value}
           onChange={handleChange}
+          onBlur={(e) => {
+            if (
+              e.relatedTarget?.id !== 'standard-select' &&
+              e.relatedTarget?.id !== 'standard-toggle'
+            ) {
+              setEnableSearch(false);
+            }
+          }}
           autoComplete="off"></input>
         <label htmlFor="input" className="input-label">
           Stock
@@ -180,13 +196,20 @@ function Sidebar() {
           Submit
         </button>
       </form>
-      {suggestions &&
-        suggestions.map((e, index) => (
-          <div key={index} className="search__container" onClick={onItemClick}>
-            <span className="search__item-name">{e['1. symbol']}</span>
-            <span className="search__item-currency">{e['8. currency']}</span>
-          </div>
-        ))}
+      <div className="header__form-search__suggestions">
+        {suggestions &&
+          suggestions.map((e, index) => (
+            <div key={index} className="search__container" onMouseDown={onItemClick}>
+              <span className="search__item-name">
+                {e['1. symbol']} ({e['2. name']})
+              </span>
+              <div>
+                <span className="search__item-currency">{e['8. currency']}</span>
+                <span className="search__item-region">{e['4. region']}</span>
+              </div>
+            </div>
+          ))}
+      </div>
     </header>
   );
 }
