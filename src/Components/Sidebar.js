@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { dataContext } from '../context';
 
 function Sidebar() {
-  const { dataValue, setDataValue, news, setNews } = useContext(dataContext);
+  const { dataValue, setDataValue, news, setNews, newsPage, setNewsPage } = useContext(dataContext);
   const [value, setValue] = useState(''); // контроль инпута
   const [selectValue, setSelectValue] = useState('Month');
   const [stockInfo, setStockInfo] = useState('');
@@ -89,6 +89,7 @@ function Sidebar() {
   const getData = (event) => {
     setIsLoading(true);
     setNews([]);
+    setNewsPage(1);
     event.preventDefault();
     let timeRange = '';
     switch (selectValue) {

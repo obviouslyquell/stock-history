@@ -9,16 +9,13 @@ function App() {
   const [dataValue, setDataValue] = useState('');
   const [news, setNews] = useState([]);
   const [isSameNews, setIsSameNews] = useState(false);
+  const [newsPage, setNewsPage] = useState(1);
   return (
-    <dataContext.Provider value={{ dataValue, setDataValue, news, setNews }}>
+    <dataContext.Provider value={{ dataValue, setDataValue, news, setNews, newsPage, setNewsPage }}>
       <div className="App">
         <Sidebar />
         <div className="container">
-          {dataValue ? (
-            <Graph />
-          ) : (
-            <div className="App__hint">Type your stock ticket in search</div>
-          )}
+          {dataValue ? <Graph /> : <></>}
           <Info />
         </div>
       </div>

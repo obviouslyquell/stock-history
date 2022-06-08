@@ -3,11 +3,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { dataContext } from '../context';
 
 function Info() {
-  const { dataValue, setDataValue, news, setNews } = useContext(dataContext);
+  const { dataValue, setDataValue, news, setNews, newsPage, setNewsPage } = useContext(dataContext);
   const [selectLanguage, setSelectLanguage] = useState('en');
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
-
+  const [stopLoading, setStopLoading] = useState(false);
   let weekAgo = new Date();
   weekAgo.setDate(weekAgo.getDate() - 7);
   useEffect(() => {
@@ -16,9 +15,10 @@ function Info() {
       document.removeEventListener('scroll', scrollHandler);
     };
   }, []);
+
   useEffect(() => {
     // if results<5 {page isnt incrementing}
-    if (loading) {
+    if (loading && !stopLoading) {
       axios
         .get(
           `https://newsapi.org/v2/everything?q=${
@@ -27,19 +27,27 @@ function Info() {
             weekAgo.toISOString().split('T')[0]
           }&sortBy=relevancy&language=${selectLanguage}&apiKey=${
             process.env.REACT_APP_SECOND_NEWS_KEY
-          }&pageSize=5&page=${page}`,
+          }&pageSize=5&page=${newsPage}`,
         )
         .then((resp) => {
-          setNews([...news, ...resp.data.articles]);
-          setPage((prev) => prev + 1);
+          if (resp.data.totalResults > newsPage * 5) {
+            setNews([...news, ...resp.data.articles]);
+            setNewsPage((prev) => prev + 1);
+          }
+          if (resp.data.totalResults <= 5) {
+            setNews(resp.data.articles);
+          }
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          setLoading(false);
+        });
     }
-  }, [dataValue, selectLanguage, loading]);
+  }, [loading, dataValue]);
 
   const handleSelectChange = (e) => {
     setSelectLanguage(e.target.value);
     setNews([]);
+    setNewsPage(1);
     setLoading(true);
   };
 
@@ -47,14 +55,16 @@ function Info() {
     if (
       e.target.documentElement.scrollHeight -
         (e.target.documentElement.scrollTop + window.innerHeight) <
-      10
+      100
     ) {
       setLoading(true);
     }
   };
   return (
     <section className="news">
-      <h1 className="heading">Latest news</h1>
+      <h1 className="heading">
+        {dataValue ? `Latest news about ${dataValue?.ticket}` : `Latest news about stocks`}
+      </h1>
 
       <div className="select">
         <select id="standard-select" value={selectLanguage} onChange={handleSelectChange}>
