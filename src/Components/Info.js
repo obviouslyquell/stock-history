@@ -26,7 +26,7 @@ function Info() {
           }&from=${
             weekAgo.toISOString().split('T')[0]
           }&sortBy=relevancy&language=${selectLanguage}&apiKey=${
-            process.env.REACT_APP_SECOND_NEWS_KEY
+            process.env.REACT_APP_NEWS_KEY
           }&pageSize=5&page=${newsPage}`,
         )
         .then((resp) => {

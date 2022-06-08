@@ -1,6 +1,13 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { dataContext } from '../context';
+import US from '../img/4x3/us.svg';
+import UK from '../img/4x3/gb.svg';
+import DE from '../img/4x3/de.svg';
+import BR from '../img/4x3/br.svg';
+import IN from '../img/4x3/in.svg';
+import FR from '../img/4x3/fr.svg';
+import RU from '../img/4x3/ru.svg';
 
 function Sidebar() {
   const { dataValue, setDataValue, news, setNews, newsPage, setNewsPage } = useContext(dataContext);
@@ -85,6 +92,27 @@ function Sidebar() {
     const min = Math.min(...arr.map((o) => o.price));
     return { ticket: ticket, arr: arr, max: max };
   }
+
+  const countryToFlag = (country) => {
+    switch (country) {
+      case 'United States':
+        return US;
+      case 'United Kingdom':
+        return UK;
+      case 'Frankfurt':
+        return DE;
+      case 'Brazil/Sao Paolo':
+        return BR;
+      case 'India/Bombay':
+        return IN;
+      case 'Paris':
+        return FR;
+      case 'XETRA':
+        return DE;
+      default:
+        return RU;
+    }
+  };
 
   const getData = (event) => {
     setIsLoading(true);
@@ -217,6 +245,7 @@ function Sidebar() {
               <div>
                 <span className="search__item-currency">{e['8. currency']}</span>
                 <span className="search__item-region">{e['4. region']}</span>
+                <img src={countryToFlag(e['4. region'])} alt="" width={16} height={16} />
               </div>
             </div>
           ))}
