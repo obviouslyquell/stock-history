@@ -8,6 +8,7 @@ import BR from '../img/4x3/br.svg';
 import IN from '../img/4x3/in.svg';
 import FR from '../img/4x3/fr.svg';
 import RU from '../img/4x3/ru.svg';
+import CA from '../img/4x3/ca.svg';
 
 function Sidebar() {
   const { dataValue, setDataValue, news, setNews, newsPage, setNewsPage } = useContext(dataContext);
@@ -109,6 +110,10 @@ function Sidebar() {
         return FR;
       case 'XETRA':
         return DE;
+      case 'Toronto Venture':
+        return CA;
+      case 'Toronto':
+        return CA;
       default:
         return RU;
     }
@@ -174,6 +179,7 @@ function Sidebar() {
   const handleSelectChange = (e) => {
     setSelectValue(e.target.value);
   };
+  console.log(suggestions);
   return (
     <header className="header">
       <label className="toggle" htmlFor="searchCheckBox" id="standard-toggle" tabIndex="0">
@@ -243,8 +249,9 @@ function Sidebar() {
                 {e['1. symbol']} ({e['2. name']})
               </span>
               <div>
-                <span className="search__item-currency">{e['8. currency']}</span>
-                <span className="search__item-region">{e['4. region']}</span>
+                <span className={`search__item-currency ${e['8. currency']}`}>
+                  {e['8. currency']}
+                </span>
                 <img src={countryToFlag(e['4. region'])} alt="" width={16} height={16} />
               </div>
             </div>

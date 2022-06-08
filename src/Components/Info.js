@@ -60,28 +60,53 @@ function Info() {
       setLoading(true);
     }
   };
+  const isRepeated = (a, b) => {
+    return a.split(' ').slice(0, 3).join(' ') === b.split(' ').slice(0, 3).join(' ');
+  };
+  const isBreak = (a) => {
+    return a.split(' ').includes('<a') || a.split(' ').includes('<li');
+  };
+  console.log(news);
   return (
     <section className="news">
-      <h1 className="heading">
-        {dataValue ? `Latest news about ${dataValue?.ticket}` : `Latest news about stocks`}
-      </h1>
+      <div className="news__header">
+        <h1 className="news__header-heading heading">
+          {dataValue ? `Latest news about ${dataValue?.ticket}` : `Latest news about stocks`}
+        </h1>
 
-      <div className="select">
-        <select id="standard-select" value={selectLanguage} onChange={handleSelectChange}>
-          <option value="en">EN</option>
-          <option value="ru">RU</option>
-          <option value="de">DE</option>
-          <option value="es">ES</option>
-        </select>
-        <div className="desc"></div>
+        <div className="news__select">
+          <select id="standard-select" value={selectLanguage} onChange={handleSelectChange}>
+            <option value="en">EN</option>
+            <option value="ru">RU</option>
+            <option value="de">DE</option>
+            <option value="es">ES</option>
+          </select>
+          <div className="news__desc"></div>
+        </div>
       </div>
 
       {news &&
         news.map((e, index) => (
           <div className="news__item" key={index}>
-            <h1>{e.title}</h1>
-            <p>{e.description}</p>
-            <p>{e.content}</p>
+            <a href={e.url} target="_blank" rel="noopener noreferrer">
+              <h1 className="news__item-heading">{e.title}</h1>
+            </a>
+            <div className="news__item-container">
+              <img src={e.urlToImage} alt="news picture" className="news__item-image" />
+              <div>
+                <a
+                  href={e.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="news__item-link">
+                  {`${e.source.name[0].toLowerCase()}${e.source.name.slice(1)}`}
+                </a>
+                <p className="news__item-description">{!isBreak(e.description) && e.description}</p>
+                <p className="news__item-content">
+                  {!isRepeated(e.description, e.content) && e.content}
+                </p>
+              </div>
+            </div>
           </div>
         ))}
     </section>
